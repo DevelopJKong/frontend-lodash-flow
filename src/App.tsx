@@ -1,13 +1,12 @@
-import _ from 'lodash';
 import { useState } from 'react';
 import axios from 'axios';
+import flow from 'lodash/flow';
 
 function App() {
-  const [num1, setNum1] = useState(0);
   const [object, setObject] = useState({} as unknown);
 
   const handleClick = async () => {
-    _.flow(
+    const result = flow(
       async () => {
         const response = await axios
           .get('https://jsonplaceholder.typicode.com/users')
@@ -24,20 +23,14 @@ function App() {
           resolve(value);
           reject(new Error('error'));
         });
-        const resultResponse = _.merge(response, response);
 
-        setNum1(num1 + 1);
-        return resultResponse;
+        return response;
       },
-      async (value: unknown) => {
-        const response = await new Promise((resolve, reject) => {
-          resolve(value);
-          reject(new Error('error'));
-        });
-        setNum1(num1 + 1);
-        console.log(response);
-      },
-    )();
+    )().then((response) => {
+      return response;
+    });
+    console.log(result);
+    return result;
   };
 
   console.log(object);
